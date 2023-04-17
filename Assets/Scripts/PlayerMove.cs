@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     //          VARIABLES           //
-    public float speed = 5f;        // Velocidad del jugador
+    public float speed = 5f;
     private Rigidbody2D rb;
 
     //          START           //
@@ -17,9 +17,9 @@ public class PlayerMove : MonoBehaviour
     //          UPDATE          //
     void FixedUpdate()
     {
-        float moveInputX = Input.GetAxisRaw("Horizontal"); 
-        float moveInputY = Input.GetAxisRaw("Vertical"); 
-        Vector2 moveVelocity = new Vector2(moveInputX, moveInputY).normalized * speed; 
-        rb.velocity = moveVelocity; 
+        float moveInputX = Input.GetAxisRaw("Horizontal");
+        float moveInputY = Input.GetAxisRaw("Vertical");
+        Vector2 moveVelocity = new Vector2(moveInputX, moveInputY).normalized * speed;
+        rb.velocity = moveVelocity;
     }
 }
