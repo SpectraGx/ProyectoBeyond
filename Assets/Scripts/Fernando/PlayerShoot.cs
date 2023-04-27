@@ -25,6 +25,7 @@ public class PlayerShoot : MonoBehaviour
         }, bala =>
         {
             bala.transform.position = shootcontroller.position;
+            bala.transform.rotation = shootcontroller.rotation;
             bala.gameObject.SetActive(true);
         }, bala =>
         {
