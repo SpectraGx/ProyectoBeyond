@@ -1,64 +1,85 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Grenade : MonoBehaviour
 {
-    public float throwForce = 10f; // Fuerza de lanzamiento
-    public float explosionRadius = 5f; // Radio de explosión
-    public float explosionForce = 100f; // Fuerza de la explosión
-    public GameObject explosionPrefab; 
+    public bool thrown;
+    public Vector3 launchoffset;
+    public float speed;
+    public float damage;
+    public float splashrange;
+    //public float timelife;
+    //private Action<Grenade> disableaction;
+
+
+    void Start()
+    {
+        if (thrown)
+        {
+            var direction = transform.right + Vector3.up;
+            GetComponent<Rigidbody2D>().AddForce(direction * speed, ForceMode2D.Impulse);
+        }
+        transform.Translate(launchoffset);
+
+        Destroy(gameObject, 2);
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!thrown)
         {
-            ThrowGrenade();
+            transform.position += transform.right * speed * Time.deltaTime;
         }
     }
 
-    // Método para lanzar la granada
-    void ThrowGrenade()
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        // Crear la granada como un objeto nuevo en la escena
-        GameObject grenade = new GameObject("Grenade");
-        grenade.transform.position = transform.position;
-        Rigidbody2D rb = grenade.AddComponent<Rigidbody2D>();
-        // Aplicar fuerza y torque a la granada para simular su lanzamiento
-        Vector2 throwDirection = transform.up;
-        rb.AddForce(throwDirection * throwForce, ForceMode2D.Impulse);
-        rb.AddTorque(Random.Range(-1f, 1f), ForceMode2D.Impulse);
-        Destroy(grenade, 3f);
-    }
-
-    // Método para gestionar la explosión
-    void Explode(Vector3 explosionPosition)
-    {
-        // Obtener todos los colliders dentro del radio de explosión
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(explosionPosition, explosionRadius);
-
-        // Aplicar fuerza de explosión a los colliders con Rigidbody2D
-        foreach (Collider2D collider in colliders)
+        if (splashrange > 0)
         {
-            Rigidbody2D rb = collider.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            var hitcolliders = Physics2D.OverlapCircleAll(transform.position, splashrange);
+            foreach (var hitcollider in hitcolliders)
             {
-                Vector3 explosionDirection = collider.transform.position - explosionPosition;
-                rb.AddForce(explosionDirection.normalized * explosionForce, ForceMode2D.Impulse);
+                var enemy = hitcollider.GetComponent<Enemy>();
+                if (enemy)
+                {
+                    var closetPoint = hitcollider.ClosestPoint(transform.position);
+                    var distance = Vector3.Distance(closetPoint, transform.position);
+
+                    var damagePercent = Mathf.InverseLerp(splashrange, 0, distance);
+                    enemy.TakeDamage(damagePercent * damage);
+                }
             }
         }
-
-        // Instanciar el efecto de explosión
-        Instantiate(explosionPrefab, explosionPosition, Quaternion.identity);
-
-        // Destruir la granada
-        Destroy(gameObject);
+        else if (other.gameObject.CompareTag("Enemy"))
+        {
+            var enemy = other.collider.GetComponent<Enemy>();
+            if (enemy)
+            {
+                enemy.TakeDamage(damage);
+            }
+            Destroy(gameObject);
+            //disableaction(this);
+        }
     }
 
-    // Método para dibujar el radio de explosión en el editor de Unity
-    void OnDrawGizmosSelected()
+    /*
+    public void DisableGrenade(Action<Grenade> disableactionparameterG)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, explosionRadius);
+        disableaction = disableactionparameterG;
     }
+
+    private void OnEnable()
+    {
+        //Destroy(gameObject,timelife);
+        StartCoroutine(TurnOffTime());
+    }*/
+
+
+    /*private IEnumerator TurnOffTime()
+    {
+        yield return new WaitForSeconds(timelife);
+        disableaction(this);
+    }*/
 }

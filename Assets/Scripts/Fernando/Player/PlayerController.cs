@@ -14,6 +14,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 speed = Vector3.zero;
     private bool viewR = true;
 
+    //          GRANADA         //
+    public Grenade grenadeprefab;
+    public Transform launchoffset;
+
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,6 +27,12 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         movehori = Input.GetAxisRaw("Horizontal") * speedmove;
+
+        //          INSTANCIAR GRANADA CON CLIC DERECHO         //
+        if (Input.GetButtonDown("Fire2"))
+        {
+            Instantiate(grenadeprefab, launchoffset.position, transform.rotation);
+        }
     }
 
     private void FixedUpdate()
