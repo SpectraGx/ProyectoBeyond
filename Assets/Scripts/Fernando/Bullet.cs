@@ -10,7 +10,8 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float timelife;
     private Action<Bullet> disableaction;
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         //Destroy(gameObject,timelife);
         StartCoroutine(TurnOffTime());
     }
