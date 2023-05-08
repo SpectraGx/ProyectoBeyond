@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class tienda : MonoBehaviour
 {
+
+    public GameObject particle;
+    public inventory Dinero;
+    public int price;
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +22,20 @@ public class tienda : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if  (Input.GetKeyDown(KeyCode.G)) 
+        {
+
+            Instantiate(particle, transform.position, Quaternion.identity);
+        }
+    }
+
+    void venta()
+    {
+        if ( Dinero.money >= price)
+        {
+
+            Dinero.money = Dinero.money - price;
+        }
+
     }
 }
