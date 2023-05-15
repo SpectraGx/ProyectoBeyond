@@ -8,7 +8,7 @@ public class tienda : MonoBehaviour
 
     public GameObject particle;
     public inventory Dinero;
-    public int price;
+    public int valor;
 
 
 
@@ -29,12 +29,14 @@ public class tienda : MonoBehaviour
         }
     }
 
-    void venta()
+    void venta(int price)
     {
         if ( Dinero.money >= price)
         {
-
             Dinero.money = Dinero.money - price;
+
+
+
         }
 
     }
