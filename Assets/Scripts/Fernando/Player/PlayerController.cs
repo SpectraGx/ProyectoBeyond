@@ -14,32 +14,37 @@ public class PlayerController : MonoBehaviour
     private Vector3 speed = Vector3.zero;
     private bool viewR = true;
 
-    //          GRANADA         //
-    public Grenade grenadeprefab;
-    public Transform launchoffset;
+    //          ANIMATOR            //
+    private Animator animator;
 
+    //          REFERENCIAS CLASES          //
+    private PlayerShoot playerShoot;
 
+    //          START           //
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+
+        playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShoot>();
+
     }
 
+    //          UPDATE          //
     private void Update()
     {
         movehori = Input.GetAxisRaw("Horizontal") * speedmove;
-
-        //          INSTANCIAR GRANADA CON CLIC DERECHO         //
-        if (Input.GetButtonDown("Fire2"))
-        {
-            Instantiate(grenadeprefab, launchoffset.position, transform.rotation);
-        }
+        animator.SetFloat("Horizontal", Mathf.Abs(movehori));
+        animator.SetBool("Pistola",playerShoot.pistola);
     }
 
+    //          FIXEDUPDATE         //
     private void FixedUpdate()
     {
         Move(movehori * Time.fixedDeltaTime);
     }
 
+    //          METODO MOVE           //
     private void Move(float mover)
     {
         Vector3 targetspeed = new Vector2(mover, rb.velocity.y);
@@ -55,6 +60,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //          METODO ROTATE           //
     private void Rotate()
     {
         viewR = !viewR;

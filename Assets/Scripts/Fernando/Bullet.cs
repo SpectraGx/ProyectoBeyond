@@ -12,7 +12,6 @@ public class Bullet : MonoBehaviour
 
     private void OnEnable()
     {
-        //Destroy(gameObject,timelife);
         StartCoroutine(TurnOffTime());
     }
     private void Update()

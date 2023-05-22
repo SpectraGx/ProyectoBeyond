@@ -6,26 +6,21 @@ using UnityEngine.Pool;
 
 public class PlayerShoot : MonoBehaviour
 {
-    /* Los comentarios son variables y metodos que son eliminados con la implementación del Object Pooling*/
-
+    //          OBJECT POOLING          //
     [SerializeField] private Transform shootcontroller;
-    //[SerializeField] private GameObject bullet;
     [SerializeField] private Bullet bulletprefab;
     [SerializeField] private float timeshoots;
     private float nextshoottime;
     private ObjectPool<Bullet> bulletPool;
 
+    //          MUNICION            //
+    [SerializeField] private int maxAmmo = 12;
+    private int actualAmmo = 12;
+    private bool recargando = false;
+    [SerializeField] private float reloadTime = 2.5f;
 
-
-    //          GRANADA         //
-    /*
-    [SerializeField] private Transform throwncontroller;
-    //[SerializeField] private GameObject Grenade;
-    [SerializeField] private Grenade grenadeprefab;
-    [SerializeField] private float timelaunch;
-    private float nextlaunchtime;
-    private ObjectPool<Grenade> grenadePool;
-    */
+    //          ACTIVAR         //
+    public bool pistola = false;
 
     private void Start()
     {
@@ -46,86 +41,57 @@ public class PlayerShoot : MonoBehaviour
         {
             Destroy(bala.gameObject);
         }, true, 10, 25);
-
-
-        //          GRANADA         //
-        /*
-        grenadePool = new ObjectPool<Grenade>(() =>
-        {
-            Grenade granada = Instantiate(grenadeprefab, throwncontroller.position, throwncontroller.rotation);
-            granada.DisableGrenade(DisablegrenadePool);
-            return granada;
-        }, granada =>
-        {
-            granada.transform.position = throwncontroller.position;
-            //granada.transform.rotation = throwncontroller.rotation;
-            granada.gameObject.SetActive(true);
-        }, granada =>
-        {
-            granada.gameObject.SetActive(false);
-        }, granada =>
-        {
-            Destroy(granada.gameObject);
-        }, true, 10, 25);
-        */
     }
 
     private void Update()
     {
+        if (recargando)
+        {
+            return;
+        }
+        if (actualAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+
+
         if (timeshoots > 0)
         {
             nextshoottime -= Time.deltaTime;
         }
-        if (Input.GetButtonDown("Fire1"))
+        if (pistola == true)
         {
-            if (nextshoottime <= 0)
+            if (Input.GetButtonDown("Fire1"))
             {
-                Shoot();
-                nextshoottime = timeshoots;
+                if (nextshoottime <= 0)
+                {
+                    Shoot();
+                    nextshoottime = timeshoots;
+                }
             }
         }
+    }
 
+    private IEnumerator Reload()
+    {
+        recargando = true;
+        Debug.Log("Recargando");
+        yield return new WaitForSeconds(reloadTime);
 
-        //          LANZAMIENTO DE GRANADA          //
-        /*
-        if (timelaunch > 0)
-        {
-            nextlaunchtime -= Time.deltaTime;
-        }
-        if (Input.GetButtonDown("Fire2"))
-        {
-            if (nextlaunchtime <= 0)
-            {
-                Launch();
-                nextlaunchtime = timelaunch;
-            }
-        }
-        */
+        actualAmmo = maxAmmo;
+        recargando = false;
+        Debug.Log("Recarga completa");
     }
 
     private void Shoot()
     {
-        //Instantiate(bullet, shootcontroller.position, shootcontroller.rotation);
         bulletPool.Get();
+        actualAmmo--;
     }
-
-    /*
-    private void Launch(){
-        grenadePool.Get();
-    }
-    */
 
     private void DisableBulletPool(Bullet bala)
     {
         bulletPool.Release(bala);
     }
-
-
-    //          DESACTIVAR POOL DE GRANADA          //
-    /*
-    private void DisablegrenadePool(Grenade granada)
-    {
-        grenadePool.Release(granada);
-    }
-    */
 }

@@ -7,13 +7,11 @@ public class Grenade : MonoBehaviour
 {
     public bool thrown;
     public Vector3 launchoffset;
-    public float speed;
-    public float damage;
+    [SerializeField] private float speed;
+    [SerializeField] private float damage;
+    [SerializeField] private float timelife;
     public float splashrange;
-    //public float timelife;
-    //private Action<Grenade> disableaction;
-
-
+    
     void Start()
     {
         if (thrown)
@@ -60,26 +58,6 @@ public class Grenade : MonoBehaviour
                 enemy.TakeDamage(damage);
             }
             Destroy(gameObject);
-            //disableaction(this);
         }
     }
-
-    /*
-    public void DisableGrenade(Action<Grenade> disableactionparameterG)
-    {
-        disableaction = disableactionparameterG;
-    }
-
-    private void OnEnable()
-    {
-        //Destroy(gameObject,timelife);
-        StartCoroutine(TurnOffTime());
-    }*/
-
-
-    /*private IEnumerator TurnOffTime()
-    {
-        yield return new WaitForSeconds(timelife);
-        disableaction(this);
-    }*/
 }
