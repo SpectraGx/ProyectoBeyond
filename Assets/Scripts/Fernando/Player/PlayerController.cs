@@ -7,6 +7,10 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
 
+    //          VIDA PJ         //
+    [SerializeField] private int maxHealth = 100;
+    private int currentHealth;
+
     //          MOVIMIENTO          //
     private float movehori = 0f;
     [SerializeField] private float speedmove = 500;
@@ -28,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
         playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShoot>();
 
+        // Inicializar vida del PJ
+        currentHealth = maxHealth;
     }
 
     //          UPDATE          //
@@ -35,7 +41,12 @@ public class PlayerController : MonoBehaviour
     {
         movehori = Input.GetAxisRaw("Horizontal") * speedmove;
         animator.SetFloat("Horizontal", Mathf.Abs(movehori));
-        animator.SetBool("Pistola",playerShoot.pistola);
+        animator.SetBool("Pistola", playerShoot.pistola);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
 
     //          FIXEDUPDATE         //
@@ -65,5 +76,16 @@ public class PlayerController : MonoBehaviour
     {
         viewR = !viewR;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + 180, 0);
+    }
+
+    public void TakeDamageEnemy(int damage)
+    {
+        currentHealth -= damage;
+    }
+
+    private void Die()
+    {
+        Debug.Log("Has muerto");
+        // Mandar a llamar menu de Game Over
     }
 }
