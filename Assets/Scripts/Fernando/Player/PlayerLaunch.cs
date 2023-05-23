@@ -8,15 +8,27 @@ public class PlayerLaunch : MonoBehaviour
     public Grenade grenadeprefab;
     public Transform launchOffSet;
     public bool grenade = false;
+    [SerializeField] private int maxAmmo = 1;
+    public int actualAmmo = 0;
+
+    //          ACTIVAR POR TECLADO         //
+    public bool num5 = false;
 
 
     private void Update()
     {
-        if (grenade == true)
+        if (actualAmmo == maxAmmo)
         {
-            if (Input.GetButtonDown("Fire2"))
+            if (num5 == true)
             {
-                Instantiate(grenadeprefab, launchOffSet.position, transform.rotation);
+                if (grenade == true)
+                {
+                    if (Input.GetButtonDown("Fire2"))
+                    {
+                        Instantiate(grenadeprefab, launchOffSet.position, transform.rotation);
+                        actualAmmo--;
+                    }
+                }
             }
         }
     }

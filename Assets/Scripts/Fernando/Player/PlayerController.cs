@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     //          REFERENCIAS CLASES          //
     private PlayerShoot playerShoot;
     private PlayerShootShot playerShootShot;
+    private PlayerShootAR playerShootAR;
+    private PlayerShootSMG playerShootSMG;
+    private PlayerLaunch playerLaunch;
 
     //          START           //
     private void Start()
@@ -33,6 +36,12 @@ public class PlayerController : MonoBehaviour
 
         playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShoot>();
         playerShootShot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShootShot>();
+        playerShootAR = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShootAR>();
+        playerShootSMG = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShootSMG>();
+        playerLaunch = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLaunch>();
+
+
+
 
 
         // Inicializar vida del PJ
@@ -48,8 +57,15 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("Horizontal", Mathf.Abs(movehori));
         animator.SetBool("Pistola", playerShoot.pistola);
         animator.SetBool("Shotgun", playerShootShot.escopeta);
+        animator.SetBool("AR", playerShootAR.ar);
+        animator.SetBool("SMG", playerShootSMG.smg);
+        animator.SetBool("Granada", playerLaunch.grenade);
         animator.SetBool("Num1", playerShoot.num1);
         animator.SetBool("Num2", playerShootShot.num2);
+        animator.SetBool("Num3", playerShootAR.num3);
+        animator.SetBool("Num4", playerShootSMG.num4);
+        animator.SetBool("Num5", playerLaunch.num5);
+
 
         //          Si la vida baja a 0         //
         if (currentHealth <= 0)
@@ -62,12 +78,46 @@ public class PlayerController : MonoBehaviour
         {
             playerShoot.num1 = true;
             playerShootShot.num2 = false;
+            playerShootAR.num3 = false;
+            playerShootSMG.num4 = false;
+            playerLaunch.num5 = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             playerShoot.num1 = false;
             playerShootShot.num2 = true;
+            playerShootAR.num3 = false;
+            playerShootSMG.num4 = false;
+            playerLaunch.num5 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            playerShoot.num1 = false;
+            playerShootShot.num2 = false;
+            playerShootAR.num3 = true;
+            playerShootSMG.num4 = false;
+            playerLaunch.num5 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            playerShoot.num1 = false;
+            playerShootShot.num2 = false;
+            playerShootAR.num3 = false;
+            playerShootSMG.num4 = true;
+            playerLaunch.num5 = false;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            playerShoot.num1 = false;
+            playerShootShot.num2 = false;
+            playerShootAR.num3 = false;
+            playerShootSMG.num4 = false;
+            playerLaunch.num5 = true;
         }
     }
 
