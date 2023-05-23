@@ -1,36 +1,35 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class PlayerShoot : MonoBehaviour
+public class PlayerShootShot : MonoBehaviour
 {
     //          OBJECT POOLING          //
     [SerializeField] private Transform shootcontroller;
-    [SerializeField] private Bullet bulletprefab;
+    [SerializeField] private BulletShot bulletShotShootprefab;
     [SerializeField] private float timeshoots;
     private float nextshoottime;
-    private ObjectPool<Bullet> bulletPool;
+    private ObjectPool<BulletShot> bulletShotPool;
 
     //          MUNICION            //
-    [SerializeField] private int maxAmmo = 12;
-    private int actualAmmo = 12;
+    [SerializeField] private int maxAmmo = 8;
+    private int actualAmmo = 8;
     private bool recargando = false;
-    [SerializeField] private float reloadTime = 2.5f;
+    [SerializeField] private float reloadTime = 4f;
 
     //          ACTIVAR         //
-    public bool pistola = false;
+    public bool escopeta = false;
 
     //          ACTIVAR POR TECLADO         //
-    public bool num1 = false;
+    public bool num2 = false;
 
     private void Start()
     {
-        bulletPool = new ObjectPool<Bullet>(() =>
+        bulletShotPool = new ObjectPool<BulletShot>(() =>
         {
-            Bullet bala = Instantiate(bulletprefab, shootcontroller.position, shootcontroller.rotation);
-            bala.DisableBullet(DisableBulletPool);
+            BulletShot bala = Instantiate(bulletShotShootprefab, shootcontroller.position, shootcontroller.rotation);
+            bala.DisableBulletShot(DisableBulletShotPool);
             return bala;
         }, bala =>
         {
@@ -64,9 +63,9 @@ public class PlayerShoot : MonoBehaviour
             nextshoottime -= Time.deltaTime;
         }
 
-        if (num1 == true)
+        if (num2 == true)
         {
-            if (pistola == true)
+            if (escopeta == true)
             {
                 if (Input.GetButtonDown("Fire1"))
                 {
@@ -93,12 +92,12 @@ public class PlayerShoot : MonoBehaviour
 
     private void Shoot()
     {
-        bulletPool.Get();
+        bulletShotPool.Get();
         actualAmmo--;
     }
 
-    private void DisableBulletPool(Bullet bala)
+    private void DisableBulletShotPool(BulletShot bala)
     {
-        bulletPool.Release(bala);
+        bulletShotPool.Release(bala);
     }
 }

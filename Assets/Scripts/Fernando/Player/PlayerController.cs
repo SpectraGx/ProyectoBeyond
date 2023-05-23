@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     //          REFERENCIAS CLASES          //
     private PlayerShoot playerShoot;
+    private PlayerShootShot playerShootShot;
 
     //          START           //
     private void Start()
@@ -31,6 +32,8 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShoot>();
+        playerShootShot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShootShot>();
+
 
         // Inicializar vida del PJ
         currentHealth = maxHealth;
@@ -40,12 +43,31 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         movehori = Input.GetAxisRaw("Horizontal") * speedmove;
+
+        //          Animator            //  
         animator.SetFloat("Horizontal", Mathf.Abs(movehori));
         animator.SetBool("Pistola", playerShoot.pistola);
+        animator.SetBool("Shotgun", playerShootShot.escopeta);
+        animator.SetBool("Num1", playerShoot.num1);
+        animator.SetBool("Num2", playerShootShot.num2);
 
+        //          Si la vida baja a 0         //
         if (currentHealth <= 0)
         {
             Die();
+        }
+
+        //          Presionar numeros           //
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerShoot.num1 = true;
+            playerShootShot.num2 = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            playerShoot.num1 = false;
+            playerShootShot.num2 = true;
         }
     }
 
