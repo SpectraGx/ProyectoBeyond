@@ -2,14 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject ActivarDerrota;
+    public GameObject ActivarVictoria;
     private Rigidbody2D rb;
 
     //          VIDA PJ         //
-    [SerializeField] private int maxHealth = 100;
-    private int currentHealth;
+    [SerializeField] public int maxHealth = 100;
+    public int currentHealth=100;
 
     //          MOVIMIENTO          //
     private float movehori = 0f;
@@ -28,6 +31,9 @@ public class PlayerController : MonoBehaviour
     private PlayerShootSMG playerShootSMG;
     private PlayerLaunch playerLaunch;
 
+
+    [SerializeField] private HealBar healBar;
+
     //          START           //
     private void Start()
     {
@@ -40,17 +46,16 @@ public class PlayerController : MonoBehaviour
         playerShootSMG = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShootSMG>();
         playerLaunch = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLaunch>();
 
-
-
-
-
         // Inicializar vida del PJ
         currentHealth = maxHealth;
+        healBar.InicializarBarraDeVida(currentHealth);
     }
 
     //          UPDATE          //
     private void Update()
     {
+
+
         movehori = Input.GetAxisRaw("Horizontal") * speedmove;
 
         //          Animator            //  
@@ -153,11 +158,19 @@ public class PlayerController : MonoBehaviour
     public void TakeDamageEnemy(int damage)
     {
         currentHealth -= damage;
+        healBar.CambiarVidaActual(currentHealth);
     }
 
     private void Die()
     {
         Debug.Log("Has muerto");
-        // Mandar a llamar menu de Game Over
+        ActivarDerrota.SetActive(true);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.CompareTag("Meta"))
+        {
+            ActivarVictoria.SetActive(true);
+        }
     }
 }
